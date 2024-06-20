@@ -168,6 +168,9 @@ MonoBehaviour:
   selectLineNumber: 5
   originObjFactory: {fileID: 3097926698015348150, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
   puzzleStartTransform: {fileID: 999376682}
+  lastPuzzlePeace: {fileID: 0}
+  selectMatrix: {x: 0, y: 0}
+  lastMatrix: {x: 0, y: 0}
   m_state: 0
 --- !u!1 &705507993
 GameObject:
@@ -393,6 +396,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2202801830243968254, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_Anchor
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2202801830243968254, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_FontSize
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2202801830243968254, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_Alignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2202801830243968254, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_CharacterSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2461870630936411072, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2461870630936411072, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2461870630936411072, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2461870630936411072, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 3097926698015348150, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
       propertyPath: m_Name
       value: PuzzleOrigin
@@ -438,7 +473,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9166881708300675147, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
