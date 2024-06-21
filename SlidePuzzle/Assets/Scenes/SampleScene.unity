@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minLineNum: 3
   maxLineNum: 8
-  selectLineNumber: 5
+  selectLineNumber: 3
   originObjFactory: {fileID: 3097926698015348150, guid: 901382ae3f37c574bbd07d62dc9c592e, type: 3}
   puzzleStartTransform: {fileID: 999376682}
   lastPuzzlePeace: {fileID: 0}

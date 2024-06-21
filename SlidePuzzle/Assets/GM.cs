@@ -101,7 +101,6 @@ public class GM : MonoBehaviour
                 PuzzleMove();
                 break;
             case GameState.puzzleMoveWait:
-                PuzzleMoveWait();
                 break;
             case GameState.clear:
                 break;
@@ -231,12 +230,12 @@ public class GM : MonoBehaviour
         for (int i = 0; i < suffleNum; i++)
         {
             //숫자 추첨
-            int randomFirstNum = UnityEngine.Random.Range(0, puzzleAllNumber);
-            int randomSecondNum = UnityEngine.Random.Range(0, puzzleAllNumber);
+            int randomFirstNum = UnityEngine.Random.Range(0, puzzleAllNumber - 1);
+            int randomSecondNum = UnityEngine.Random.Range(0, puzzleAllNumber - 1);
             //중복이면 SecondNum은 다음 번호로 (뽑은 숫자가 최대치면 0이 되도록 % puzzleAllNumber) 해준다
             if (randomFirstNum == randomSecondNum)
             {
-                randomSecondNum = (randomSecondNum + 1) % puzzleAllNumber;
+                randomSecondNum = (randomSecondNum + 1) % (puzzleAllNumber - 1);
             }
 
             //1차배열 변경
@@ -275,17 +274,7 @@ public class GM : MonoBehaviour
 
             //행렬에 맞춰서 위치 변경
             arrayPuzzlePiece[line, row].transform.localPosition = arrayPuzzlePosition[line, row];
-
-            //마지막 퍼즐 행렬 찾기
-            if(arrayPuzzlePiece[line, row].name == (puzzleAllNumber - 1).ToString())
-            {
-                lastMatrix.x = line;
-                lastMatrix.y = row;
-            }
-
         }
-
-
 
         //플레이 게임으로~
         m_state = GameState.playingGame;
@@ -294,23 +283,8 @@ public class GM : MonoBehaviour
     //퍼즐을 풀 수 있는가 확인하기
     void PuzzleCheck()
     {
-        //움직이는 퍼즐(마지막 퍼즐) 찾기
-        for (int i = 0; i < puzzleAllNumber; i++)
-        {
-            //행
-            int line = i / selectLineNumber;
-            //렬
-            int row = i % selectLineNumber;
-
-            //마지막 퍼즐 행렬 찾기
-            if (arrayPuzzlePiece[line, row].name == (puzzleAllNumber - 1).ToString())
-            {
-                lastMatrix.x = line;
-                lastMatrix.y = row;
-            }
-
-        }
-
+        lastMatrix.x = selectLineNumber - 1;
+        lastMatrix.y = selectLineNumber - 1;
 
         //무질서도 구하기
         for (int i = 0; i < puzzleAllNumber; i++)
@@ -319,28 +293,23 @@ public class GM : MonoBehaviour
             {
                 if(linePuzzle[i] > linePuzzle[j])
                 {
-                    if(linePuzzle[i] != puzzleAllNumber - 1)
-                    {
-                        inversion++;
-                    }
+                    inversion++;
                 }
             }
         }
-
-        print(inversion);
 
         //퍼즐을 풀 수 있는지 알아보는 방법
         //line의 수가 홀수이고 무질서도가 짝수이면 풀 수 있다 
         //line수가 짝수이고 
         // - 빈칸퍼즐이 밑에서 새어서 짝수행이며 무질서도가  홀수
         // - 빈칸퍼즐이 밑에서 새어서 홀수이고 무질서도가 짝수이면
-        //풀수있다 -> 즉 반대이면 풀수 없다
-        // 그러하다면 어떻게 할 수 있나?
+        // 풀수있다 -> 반대이면 풀수 없다
+        // 그러하다면 어떻게 해야 풀 수 있는 퍼즐이 되나?
         //맨 마지막 퍼즐과 그 앞의 퍼즐을 교체하면 짝수홀수를 변경 할 수 있다
 
 
         //풀수 없는 조건인
-        //1.홀수 이고, 무질서도가 홀수면
+        //1. line이 홀수 이고, 무질서도가 홀수면
         if(selectLineNumber % 2 == 1 && inversion % 2 == 1)
         {
             LastPieceChange();
@@ -352,31 +321,16 @@ public class GM : MonoBehaviour
             {
                 LastPieceChange();
             }
-            //3.밑에서 짝수층이고 무질서도가 짝수면
-            else if((selectLineNumber - lastMatrix.x) % 2 == 0 && inversion % 2 == 0)
-            {
-                LastPieceChange();
-            }
         }
     }
 
     void LastPieceChange()
     {
-        print("바꾸기!");
-        //마지막 숫자 가지고오기
-        int lastNum = puzzleAllNumber - 1;
-        //마지막이 마지막퍼즐이면
-        if(puzzleAllNumber - 1 == linePuzzle[lastNum])
-        {
-            lastNum = lastNum - 1;
-        }
-        //그 앞의 마지막퍼즐
+        //보이는 마지막 퍼즐
+        int lastNum = puzzleAllNumber - 2;
+        //바로 그 전에 퍼즐
         int semilastNum = lastNum - 1;
 
-        if(puzzleAllNumber - 1 == linePuzzle[semilastNum])
-        {
-            semilastNum = semilastNum - 1;
-        }
 
         int lastLine = lastNum / selectLineNumber;
         int lastRow = lastNum % selectLineNumber;
@@ -389,11 +343,6 @@ public class GM : MonoBehaviour
         //위치교대
         arrayPuzzlePiece[lastLine, lastRow] = arrayPuzzlePiece[semiLastLine, semiLastRow];
         arrayPuzzlePiece[semiLastLine, semiLastRow] = temp;
-
-        //1차배열도 변경
-        int tempNum = linePuzzle[lastNum];
-        linePuzzle[lastNum] = linePuzzle[semilastNum];
-        linePuzzle[semilastNum] = tempNum;
     }
 
     void WaitSelect()
@@ -464,8 +413,6 @@ public class GM : MonoBehaviour
                     //이동으로 바꾼다
                     m_state = GameState.puzzleMove;
                 }
-
-
             }
         }
     }
@@ -523,6 +470,7 @@ public class GM : MonoBehaviour
         m_state = GameState.puzzleMoveWait;
     }
 
+    //이동 코루틴
     IEnumerator Co_Moving(Vector2Int startMatrix, Vector2Int goalMatrix, GameObject puzzlePiece)
     {
         float alpha = 0;
@@ -582,7 +530,7 @@ public class GM : MonoBehaviour
 
     void ViewText()
     {
-        //글자없애기
+        //글자 보이게 하기
         for (int i = 0; i < puzzleAllNumber; i++)
         {
             int line = i / selectLineNumber;
