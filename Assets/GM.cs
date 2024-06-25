@@ -26,7 +26,7 @@ public class GM : MonoBehaviour
     Vector3[,] arrayPuzzlePosition;
 
     //무작위도 확인
-    int[] linePuzzle;
+    int[] oneLinePuzzle;
     int inversion = 0;
 
     //마지막퍼즐
@@ -49,12 +49,10 @@ public class GM : MonoBehaviour
     //유한상태머신
     public enum GameState
     {
-        selectdifficult,
         makePuzzle,
         suffle,
         playingGame,
         puzzleMove,
-        puzzleMoveWait,
         clear
     }
 
@@ -75,9 +73,8 @@ public class GM : MonoBehaviour
     void Start()
     {
         //시작할때 난이도 조절부터 시작
-        m_state = GameState.selectdifficult;
+        m_state = GameState.makePuzzle;
 
-        StartGame();
     }
 
 
@@ -86,8 +83,6 @@ public class GM : MonoBehaviour
     {
         switch (m_state)
         {
-            case GameState.selectdifficult:
-                break;
             case GameState.makePuzzle:
                 MakePuzzle();
                 break;
@@ -98,9 +93,6 @@ public class GM : MonoBehaviour
                 WaitSelect();
                 break;
             case GameState.puzzleMove:
-                PuzzleMove();
-                break;
-            case GameState.puzzleMoveWait:
                 break;
             case GameState.clear:
                 break;
@@ -150,7 +142,7 @@ public class GM : MonoBehaviour
         arrayPuzzlePiece = new GameObject[selectLineNumber, selectLineNumber];
         arrayPuzzlePosition = new Vector3[selectLineNumber, selectLineNumber];
 
-        linePuzzle = new int[puzzleAllNumber];
+        oneLinePuzzle = new int[puzzleAllNumber];
 
 
         //퍼즐의 크기 측정
@@ -173,7 +165,7 @@ public class GM : MonoBehaviour
             puzzlePiece.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer("PuzzlePiece");
 
             //1차배열에 넣기
-            linePuzzle[i] = i;
+            oneLinePuzzle[i] = i;
             //생성한 퍼즐을 2차원 배열에 넣기
             //행
             int row = i / selectLineNumber;
@@ -198,17 +190,19 @@ public class GM : MonoBehaviour
             //offset조절
             myMat.mainTextureOffset = new Vector2(column * 1f / selectLineNumber, 1 - ((row + 1) * 1f / selectLineNumber));
 
-            TextMesh tm = puzzlePiece.GetComponentInChildren<TextMesh>();
-            //tm.text = (i + 1).ToString();
+
+            
 
             //마지막 퍼즐은 보이지 않도록 한다
             if (i == puzzleAllNumber - 1)
             {
-                //puzzlePiece.GetComponentInChildren<MeshRenderer>().enabled = false;
+                puzzlePiece.GetComponentInChildren<MeshRenderer>().enabled = false;
                 puzzlePiece.GetComponentInChildren<TextMesh>().text = "";
                 lastPuzzlePeace = puzzlePiece;
             }
         }
+
+        ViewText();
 
         //마지막퍼즐 위치 입력
         lastMatrix = new Vector2Int(selectLineNumber - 1, selectLineNumber - 1);
@@ -220,13 +214,8 @@ public class GM : MonoBehaviour
 
     void SufflePuzzle()
     {
-        return;
-
         //셔플 횟수 = 총갯수의 2배 * 2
         int suffleNum = puzzleAllNumber * 2;
-
-        //무질서도 0
-        inversion = 0;
 
         //섞어준다!
         for (int i = 0; i < suffleNum; i++)
@@ -241,9 +230,9 @@ public class GM : MonoBehaviour
             }
 
             //1차배열 변경
-            int temp = linePuzzle[randomFirstNum];
-            linePuzzle[randomFirstNum] = linePuzzle[randomSecondNum];
-            linePuzzle[randomSecondNum] = temp;
+            int temp = oneLinePuzzle[randomFirstNum];
+            oneLinePuzzle[randomFirstNum] = oneLinePuzzle[randomSecondNum];
+            oneLinePuzzle[randomSecondNum] = temp;
 
             //fistNum과 secNum의 해당되는 퍼즐을 교체해준다
             //fistNum에 해당하는 행렬을 찾은 후
@@ -261,7 +250,7 @@ public class GM : MonoBehaviour
             arrayPuzzlePiece[secRow, secColumn] = tempObj;
         }
 
-        //제대로 작동되는 것인지 확인하기!
+        //풀 수 있는 퍼즐인지 확인하기!
         PuzzleCheck();
         
 
@@ -293,7 +282,7 @@ public class GM : MonoBehaviour
         {
             for (int j = i; j < puzzleAllNumber; j++)
             {
-                if(linePuzzle[i] > linePuzzle[j])
+                if(oneLinePuzzle[i] > oneLinePuzzle[j])
                 {
                     inversion++;
                 }
@@ -412,8 +401,10 @@ public class GM : MonoBehaviour
                     skimaMatrix = lastMatrix - selectMatrix;
 
 
-                    //이동으로 바꾼다
                     m_state = GameState.puzzleMove;
+
+                    //이동으로 바꾼다
+                    PuzzleMove();
                 }
             }
         }
@@ -468,8 +459,6 @@ public class GM : MonoBehaviour
 
         //으아아아
         lastMatrix = selectMatrix;
-
-        m_state = GameState.puzzleMoveWait;
     }
 
     //이동 코루틴
