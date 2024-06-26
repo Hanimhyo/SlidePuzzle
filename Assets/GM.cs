@@ -106,12 +106,12 @@ public class GM : MonoBehaviour
         selectLineNumber++;
 
         //최대치를 넘으면 최대치로 
-        if(maxLineNum < selectLineNumber)
+        if (maxLineNum < selectLineNumber)
         {
             selectLineNumber = maxLineNum;
         }
     }
-    
+
     //퍼즐 난이도 다운
     public void MinusDifficultDown()
     {
@@ -174,7 +174,7 @@ public class GM : MonoBehaviour
 
             //퍼즐
             arrayPuzzlePiece[row, column] = puzzlePiece;
-            arrayPuzzlePosition[row, column] = (new Vector3(puzzleWidth * column , 
+            arrayPuzzlePosition[row, column] = (new Vector3(puzzleWidth * column,
                                                           puzzleHeight * -row,
                                                           0));
 
@@ -189,9 +189,6 @@ public class GM : MonoBehaviour
             myMat.mainTextureScale = new Vector2(1f / selectLineNumber, 1f / selectLineNumber);
             //offset조절
             myMat.mainTextureOffset = new Vector2(column * 1f / selectLineNumber, 1 - ((row + 1) * 1f / selectLineNumber));
-
-
-            
 
             //마지막 퍼즐은 보이지 않도록 한다
             if (i == puzzleAllNumber - 1)
@@ -252,7 +249,7 @@ public class GM : MonoBehaviour
 
         //풀 수 있는 퍼즐인지 확인하기!
         PuzzleCheck();
-        
+
 
 
         //퍼즐 위치 정렬하기
@@ -282,7 +279,7 @@ public class GM : MonoBehaviour
         {
             for (int j = i; j < puzzleAllNumber; j++)
             {
-                if(oneLinePuzzle[i] > oneLinePuzzle[j])
+                if (oneLinePuzzle[i] > oneLinePuzzle[j])
                 {
                     inversion++;
                 }
@@ -301,14 +298,19 @@ public class GM : MonoBehaviour
 
         //풀수 없는 조건인
         //1. row이 홀수 이고, 무질서도가 홀수면
-        if(selectLineNumber % 2 == 1 && inversion % 2 == 1)
+        if (selectLineNumber % 2 == 1 && inversion % 2 == 1)
         {
             LastPieceChange();
         }
-        else if(selectLineNumber % 2 == 0)
+        else if (selectLineNumber % 2 == 0)
         {
             //2.밑에서 홀수층이고 무질서도가 홀수면
-            if((selectLineNumber - lastMatrix.x) % 2 == 1 && inversion % 2 == 1)
+            if ((selectLineNumber - lastMatrix.x) % 2 == 1 && inversion % 2 == 1)
+            {
+                LastPieceChange();
+            }
+            //3.밑에서 짝수층이고 무질서도가 짝수이면
+            else if ((selectLineNumber - lastMatrix.x) % 2 == 1 && inversion % 2 == 1)
             {
                 LastPieceChange();
             }
@@ -317,15 +319,16 @@ public class GM : MonoBehaviour
 
     void LastPieceChange()
     {
-        //보이는 마지막 퍼즐
+        //셔플한 퍼즐의 마지막
         int lastNum = puzzleAllNumber - 2;
-        //바로 그 전에 퍼즐
+        //그리고 그 전의 퍼즐
         int semilastNum = lastNum - 1;
 
-
+        //마지막 퍼즐의 행,렬 찾기
         int lastRow = lastNum / selectLineNumber;
         int lastColumn = lastNum % selectLineNumber;
 
+        //마지막 직전의 퍼즐의 행,렬 찾기
         int semiLastRow = semilastNum / selectLineNumber;
         int semiLastColumn = semilastNum % selectLineNumber;
 
@@ -339,14 +342,14 @@ public class GM : MonoBehaviour
     void WaitSelect()
     {
         //마우스를 클릭하면
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitinfo;
             //클릭한게 퍼즐 조각이라면
-            if(Physics.Raycast(ray,out hitinfo, 100, 1 << LayerMask.NameToLayer("PuzzlePiece")))
+            if (Physics.Raycast(ray, out hitinfo, 100, 1 << LayerMask.NameToLayer("PuzzlePiece")))
             {
-                
+
                 //해당 위치 파악하기
                 //찾은 퍼즐의 부모의 localPos를 찾아서
                 Vector3 hitPos = hitinfo.transform.parent.localPosition;
@@ -361,15 +364,17 @@ public class GM : MonoBehaviour
                 for (int i = 0; i < selectLineNumber; i++)
                 {
                     //행검사
-                    if(arrayPuzzlePiece[selectMatrix.x, i].name == (puzzleAllNumber - 1).ToString())
+                    //선택한 행과 0~line수 열을 검사해서 마지막퍼즐과 같은게 있는가?
+                    if (arrayPuzzlePiece[selectMatrix.x, i].name == (puzzleAllNumber - 1).ToString())
                     {
-                        if(i > selectMatrix.y)
+                        //있고 열의 위에서 
+                        if (i > selectMatrix.y)
                         {
                             //오른쪽 이동으로
                             move_state = MoveState.right;
                             break;
                         }
-                        else if(i < selectMatrix.y)
+                        else if (i < selectMatrix.y)
                         {
                             //왼쪽이동으로
                             move_state = MoveState.left;
@@ -395,7 +400,7 @@ public class GM : MonoBehaviour
                 }
 
                 //이동하는거면
-                if(move_state != MoveState.noMove)
+                if (move_state != MoveState.noMove)
                 {
                     //차이행렬 = 마지막 - 선택
                     skimaMatrix = lastMatrix - selectMatrix;
@@ -416,7 +421,8 @@ public class GM : MonoBehaviour
         switch (move_state)
         {
             case MoveState.noMove:
-                break;
+                m_state = GameState.playingGame;
+                return;
             case MoveState.up:
                 moveVector = Vector2Int.right;
                 break;
@@ -435,11 +441,11 @@ public class GM : MonoBehaviour
 
         for (int i = 0; i < Count; i++)
         {
-            //이건 골의 행렬
+            //이건 도착의 행렬
             Vector2Int goalMatrix = skimaMatrix + selectMatrix;
             //한칸 이동
             skimaMatrix = skimaMatrix + moveVector;
-            //피동 퍼즐 행렬
+            //피이동 퍼즐의 행렬
             Vector2Int startMatrix = skimaMatrix + selectMatrix;
 
             //이동
@@ -457,7 +463,8 @@ public class GM : MonoBehaviour
 
         }
 
-        //으아아아
+        //선택한 행렬이 마지막행렬이 된다
+        //선택한 퍼즐위치에 마지막퍼즐이 이동하니까!
         lastMatrix = selectMatrix;
     }
 
@@ -466,10 +473,10 @@ public class GM : MonoBehaviour
     {
         float alpha = 0;
 
-        while(alpha < 1)
+        while (alpha < 1)
         {
             alpha += Time.deltaTime * 5f;
-            //이동!
+            //퍼즐의 위치는 = Vector.Lerp(시작위치, 도착위치, alpha값)
             puzzlePiece.transform.localPosition = Vector3.Lerp(arrayPuzzlePosition[startMatrix.x, startMatrix.y], arrayPuzzlePosition[goalMatrix.x, goalMatrix.y], alpha);
 
             yield return null;
@@ -477,16 +484,19 @@ public class GM : MonoBehaviour
 
         puzzlePiece.transform.localPosition = arrayPuzzlePosition[goalMatrix.x, goalMatrix.y];
 
-        if(ClearCheck())
+        //게임 클리어인지 체크!
+        if (ClearCheck())
         {
+            //상태를 클리어로 변경
             m_state = GameState.clear;
+            //마지막퍼즐 보이게 하기
             lastPuzzlePeace.GetComponentInChildren<MeshRenderer>().enabled = true;
-
             //글자없애기
             ClearText();
         }
         else
         {
+            //상태를 플래이게임으로 변경
             m_state = GameState.playingGame;
         }
 
@@ -501,13 +511,14 @@ public class GM : MonoBehaviour
     {
         bool clear = true;
 
-        for(int i = 0; i < selectLineNumber; i++)
+        //퍼즐이름과 행렬의 순서가 일치하는가?
+        for (int i = 0; i < selectLineNumber; i++)
         {
-            for(int j = 0; j < selectLineNumber; j++)
+            for (int j = 0; j < selectLineNumber; j++)
             {
                 int puzzleNum = i * selectLineNumber + j;
 
-                if (arrayPuzzlePiece[i,j].name != puzzleNum.ToString())
+                if (arrayPuzzlePiece[i, j].name != puzzleNum.ToString())
                 {
                     clear = false;
                     break;
@@ -532,7 +543,7 @@ public class GM : MonoBehaviour
             //행렬에 맞춰서 위치 변경
             arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>().text = (Int32.Parse(arrayPuzzlePiece[row, column].name) + 1).ToString();
 
-            if(arrayPuzzlePiece[row, column].name == (puzzleAllNumber - 1).ToString())
+            if (arrayPuzzlePiece[row, column].name == (puzzleAllNumber - 1).ToString())
             {
                 arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>().text = "";
             }
