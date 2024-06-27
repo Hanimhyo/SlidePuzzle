@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,47 +6,47 @@ using UnityEngine;
 public class GM : MonoBehaviour
 {
 
-    // ÆÛÁñÀÇ ÃÖ¼Ò¶óÀÎ, ÃÖ´ë¶óÀÎ ¼ö
+    // í¼ì¦ì˜ ìµœì†Œë¼ì¸, ìµœëŒ€ë¼ì¸ ìˆ˜
     public int minLineNum = 3;
     public int maxLineNum = 8;
-    // ÆÛÁñÀÇ ¶óÀÎ °¹¼ö
+    // í¼ì¦ì˜ ë¼ì¸ ê°¯ìˆ˜
     public int selectLineNumber = 3;
     int puzzleAllNumber = 0;
 
-    //¿øº» ¿ÀºêÁ§Æ®
+    //ì›ë³¸ ì˜¤ë¸Œì íŠ¸
     public GameObject originObjFactory;
-    //ÆÛÁñµéÀÌ ³ª¿Ã ±âÁØÁ¡ À§Ä¡!
+    //í¼ì¦ë“¤ì´ ë‚˜ì˜¬ ê¸°ì¤€ì  ìœ„ì¹˜!
     public Transform puzzleStartTransform;
-    //ÆÛÁñ ÇÏ³ªÀÇ ±æÀÌ
+    //í¼ì¦ í•˜ë‚˜ì˜ ê¸¸ì´
     float puzzleWidth = 0;
     float puzzleHeight = 0;
 
-    //2Â÷¿ø ¹è¿­ ¼±¾ğ
+    //2ì°¨ì› ë°°ì—´ ì„ ì–¸
     GameObject[,] arrayPuzzlePiece;
     Vector3[,] arrayPuzzlePosition;
 
-    //¹«ÀÛÀ§µµ È®ÀÎ
+    //ë¬´ì‘ìœ„ë„ í™•ì¸
     int[] oneLinePuzzle;
     int inversion = 0;
 
-    //¸¶Áö¸·ÆÛÁñ
+    //ë§ˆì§€ë§‰í¼ì¦
     public GameObject lastPuzzlePeace;
 
 
-    //Å¬¸¯ÇÑ ÆÛÁñ Çà·Ä
+    //í´ë¦­í•œ í¼ì¦ í–‰ë ¬
     public Vector2Int selectMatrix;
 
-    //¸¶Áö¸·ÆÛÁñ Çà·Ä
+    //ë§ˆì§€ë§‰í¼ì¦ í–‰ë ¬
     public Vector2Int lastMatrix;
 
-    //Â÷ÀÌÀÇ °£°İ
+    //ì°¨ì´ì˜ ê°„ê²©
     Vector2Int skimaMatrix;
 
-    //º¯È­·®
+    //ë³€í™”ëŸ‰
     Vector2Int moveVector;
 
 
-    //À¯ÇÑ»óÅÂ¸Ó½Å
+    //ìœ í•œìƒíƒœë¨¸ì‹ 
     public enum GameState
     {
         makePuzzle,
@@ -58,7 +58,7 @@ public class GM : MonoBehaviour
 
     public GameState m_state;
 
-    //ÀÌµ¿¸Ó½Å
+    //ì´ë™ë¨¸ì‹ 
     enum MoveState
     {
         noMove,
@@ -72,7 +72,7 @@ public class GM : MonoBehaviour
 
     void Start()
     {
-        //½ÃÀÛÇÒ¶§ ³­ÀÌµµ Á¶ÀıºÎÅÍ ½ÃÀÛ
+        //ì‹œì‘í• ë•Œ ë‚œì´ë„ ì¡°ì ˆë¶€í„° ì‹œì‘
         m_state = GameState.makePuzzle;
 
     }
@@ -99,36 +99,36 @@ public class GM : MonoBehaviour
         }
     }
 
-    //ÆÛÁñ ³­ÀÌµµ ¾÷
+    //í¼ì¦ ë‚œì´ë„ ì—…
     public void PlusDifficultUp()
     {
-        //¶óÀÎ Áõ°¡!
+        //ë¼ì¸ ì¦ê°€!
         selectLineNumber++;
 
-        //ÃÖ´ëÄ¡¸¦ ³ÑÀ¸¸é ÃÖ´ëÄ¡·Î 
+        //ìµœëŒ€ì¹˜ë¥¼ ë„˜ìœ¼ë©´ ìµœëŒ€ì¹˜ë¡œ 
         if (maxLineNum < selectLineNumber)
         {
             selectLineNumber = maxLineNum;
         }
     }
 
-    //ÆÛÁñ ³­ÀÌµµ ´Ù¿î
+    //í¼ì¦ ë‚œì´ë„ ë‹¤ìš´
     public void MinusDifficultDown()
     {
-        //¶óÀÎ °¨¼Ò!
+        //ë¼ì¸ ê°ì†Œ!
         selectLineNumber--;
 
-        //ÃÖ¼ÒÄ¡ ¹ØÀ¸·Î °¡¸é ÃÖ¼ÒÄ¡·Î
+        //ìµœì†Œì¹˜ ë°‘ìœ¼ë¡œ ê°€ë©´ ìµœì†Œì¹˜ë¡œ
         if (minLineNum > selectLineNumber)
         {
             selectLineNumber = minLineNum;
         }
     }
 
-    //°ÔÀÓ ½ÃÀÛ
+    //ê²Œì„ ì‹œì‘
     public void StartGame()
     {
-        //makeÆÛÁñ ´Ü°è·Î ÀÌÇà
+        //makeí¼ì¦ ë‹¨ê³„ë¡œ ì´í–‰
         m_state = GameState.makePuzzle;
     }
 
@@ -138,41 +138,41 @@ public class GM : MonoBehaviour
     void MakePuzzle()
     {
         puzzleAllNumber = selectLineNumber * selectLineNumber;
-        //¹è¿­ Å©±â ÁöÁ¤
+        //ë°°ì—´ í¬ê¸° ì§€ì •
         arrayPuzzlePiece = new GameObject[selectLineNumber, selectLineNumber];
         arrayPuzzlePosition = new Vector3[selectLineNumber, selectLineNumber];
 
         oneLinePuzzle = new int[puzzleAllNumber];
 
 
-        //ÆÛÁñÀÇ Å©±â ÃøÁ¤
+        //í¼ì¦ì˜ í¬ê¸° ì¸¡ì •
         puzzleWidth = originObjFactory.transform.GetChild(0).transform.localScale.x / selectLineNumber;
         puzzleHeight = originObjFactory.transform.GetChild(0).transform.localScale.y / selectLineNumber;
 
-        //  - 3 row ÆÛÁñÀÌ´Ï 3x3 = 9 °³ »ı¼ºÇÒ ÇÊ¿ä
+        //  - 3 row í¼ì¦ì´ë‹ˆ 3x3 = 9 ê°œ ìƒì„±í•  í•„ìš”
         for (int i = 0; i < puzzleAllNumber; i++)
         {
-            //ÆÛÁñ »ı¼º
+            //í¼ì¦ ìƒì„±
             GameObject puzzlePiece = Instantiate(originObjFactory);
 
-            //ºÎ¸ğ ÁöÁ¤ÇÏ±â
+            //ë¶€ëª¨ ì§€ì •í•˜ê¸°
             puzzlePiece.transform.parent = puzzleStartTransform;
 
-            //»ı¼º ¼ø¼­¿¡ ¸Â°Ô ÀÌ¸§À» ÁöÁ¤
+            //ìƒì„± ìˆœì„œì— ë§ê²Œ ì´ë¦„ì„ ì§€ì •
             puzzlePiece.transform.name = i.ToString();
             puzzlePiece.transform.GetChild(0).name = i.ToString();
-            //·¹ÀÌ¾îµµ ÁöÁ¤
+            //ë ˆì´ì–´ë„ ì§€ì •
             puzzlePiece.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer("PuzzlePiece");
 
-            //1Â÷¹è¿­¿¡ ³Ö±â
+            //1ì°¨ë°°ì—´ì— ë„£ê¸°
             oneLinePuzzle[i] = i;
-            //»ı¼ºÇÑ ÆÛÁñÀ» 2Â÷¿ø ¹è¿­¿¡ ³Ö±â
-            //Çà
+            //ìƒì„±í•œ í¼ì¦ì„ 2ì°¨ì› ë°°ì—´ì— ë„£ê¸°
+            //í–‰
             int row = i / selectLineNumber;
-            //·Ä
+            //ë ¬
             int column = i % selectLineNumber;
 
-            //ÆÛÁñ
+            //í¼ì¦
             arrayPuzzlePiece[row, column] = puzzlePiece;
             arrayPuzzlePosition[row, column] = (new Vector3(puzzleWidth * column,
                                                           puzzleHeight * -row,
@@ -180,17 +180,17 @@ public class GM : MonoBehaviour
 
             arrayPuzzlePiece[row, column].transform.localPosition = arrayPuzzlePosition[row, column];
 
-            //  - Å©±â°¡ °¡·Î, ¼¼·Î°¡ 1/n·Î ÁÙ¾îµé ÇÊ¿ä
+            //  - í¬ê¸°ê°€ ê°€ë¡œ, ì„¸ë¡œê°€ 1/në¡œ ì¤„ì–´ë“¤ í•„ìš”
             puzzlePiece.transform.localScale = Vector3.one / selectLineNumber;
 
-            //ÆÛÁñ ÀÌ¹ÌÁö Á¶Á¤
+            //í¼ì¦ ì´ë¯¸ì§€ ì¡°ì •
             Material myMat = puzzlePiece.GetComponentInChildren<MeshRenderer>().material;
-            //Tiling Á¶Àı
+            //Tiling ì¡°ì ˆ
             myMat.mainTextureScale = new Vector2(1f / selectLineNumber, 1f / selectLineNumber);
-            //offsetÁ¶Àı
+            //offsetì¡°ì ˆ
             myMat.mainTextureOffset = new Vector2(column * 1f / selectLineNumber, 1 - ((row + 1) * 1f / selectLineNumber));
 
-            //¸¶Áö¸· ÆÛÁñÀº º¸ÀÌÁö ¾Êµµ·Ï ÇÑ´Ù
+            //ë§ˆì§€ë§‰ í¼ì¦ì€ ë³´ì´ì§€ ì•Šë„ë¡ í•œë‹¤
             if (i == puzzleAllNumber - 1)
             {
                 puzzlePiece.GetComponentInChildren<MeshRenderer>().enabled = false;
@@ -200,80 +200,80 @@ public class GM : MonoBehaviour
 
         ViewText();
 
-        //¸¶Áö¸·ÆÛÁñ À§Ä¡ ÀÔ·Â
+        //ë§ˆì§€ë§‰í¼ì¦ ìœ„ì¹˜ ì…ë ¥
         lastMatrix = new Vector2Int(selectLineNumber - 1, selectLineNumber - 1);
 
-        //»ı¼º¿Ï·áÈÄ¿¡ ¼ÅÇÃ·Î ÀÌÇà
+        //ìƒì„±ì™„ë£Œí›„ì— ì…”í”Œë¡œ ì´í–‰
         m_state = GameState.suffle;
     }
 
 
     void SufflePuzzle()
     {
-        //¼ÅÇÃ È½¼ö = ÃÑ°¹¼öÀÇ 2¹è * 2
+        //ì…”í”Œ íšŸìˆ˜ = ì´ê°¯ìˆ˜ì˜ 2ë°° * 2
         int suffleNum = puzzleAllNumber * 2;
 
-        //¼¯¾îÁØ´Ù!
+        //ì„ì–´ì¤€ë‹¤!
         for (int i = 0; i < suffleNum; i++)
         {
-            //¼ıÀÚ ÃßÃ·
+            //ìˆ«ì ì¶”ì²¨
             int randomFirstNum = UnityEngine.Random.Range(0, puzzleAllNumber - 1);
             int randomSecondNum = UnityEngine.Random.Range(0, puzzleAllNumber - 1);
-            //Áßº¹ÀÌ¸é SecondNumÀº ´ÙÀ½ ¹øÈ£·Î (»ÌÀº ¼ıÀÚ°¡ ÃÖ´ëÄ¡¸é 0ÀÌ µÇµµ·Ï % puzzleAllNumber) ÇØÁØ´Ù
+            //ì¤‘ë³µì´ë©´ SecondNumì€ ë‹¤ìŒ ë²ˆí˜¸ë¡œ (ë½‘ì€ ìˆ«ìê°€ ìµœëŒ€ì¹˜ë©´ 0ì´ ë˜ë„ë¡ % puzzleAllNumber) í•´ì¤€ë‹¤
             if (randomFirstNum == randomSecondNum)
             {
                 randomSecondNum = (randomSecondNum + 1) % (puzzleAllNumber - 1);
             }
 
-            //1Â÷¹è¿­ º¯°æ
+            //1ì°¨ë°°ì—´ ë³€ê²½
             int temp = oneLinePuzzle[randomFirstNum];
             oneLinePuzzle[randomFirstNum] = oneLinePuzzle[randomSecondNum];
             oneLinePuzzle[randomSecondNum] = temp;
 
-            //fistNum°ú secNumÀÇ ÇØ´çµÇ´Â ÆÛÁñÀ» ±³Ã¼ÇØÁØ´Ù
-            //fistNum¿¡ ÇØ´çÇÏ´Â Çà·ÄÀ» Ã£Àº ÈÄ
+            //fistNumê³¼ secNumì˜ í•´ë‹¹ë˜ëŠ” í¼ì¦ì„ êµì²´í•´ì¤€ë‹¤
+            //fistNumì— í•´ë‹¹í•˜ëŠ” í–‰ë ¬ì„ ì°¾ì€ í›„
             int firstRow = randomFirstNum / selectLineNumber;
             int firstColumn = randomFirstNum % selectLineNumber;
-            //ÆÛÁñÀ» ÀÓ½Ã º¯¼ö¿¡ ³Ö¾îÁÖ°í
+            //í¼ì¦ì„ ì„ì‹œ ë³€ìˆ˜ì— ë„£ì–´ì£¼ê³ 
             GameObject tempObj = arrayPuzzlePiece[firstRow, firstColumn];
 
-            //secNum¿¡ ÇØ´çÇÏ´Â Çà·ÄÀ» Ã£¾Æ¼­
+            //secNumì— í•´ë‹¹í•˜ëŠ” í–‰ë ¬ì„ ì°¾ì•„ì„œ
             int secRow = randomSecondNum / selectLineNumber;
             int secColumn = randomSecondNum % selectLineNumber;
-            //firstNum¿¡ ÀÖ´Â ÆÛÁñÀ» secNum ÆÛÁñ·Î º¯°æÇØÁØ´Ù
+            //firstNumì— ìˆëŠ” í¼ì¦ì„ secNum í¼ì¦ë¡œ ë³€ê²½í•´ì¤€ë‹¤
             arrayPuzzlePiece[firstRow, firstColumn] = arrayPuzzlePiece[secRow, secColumn];
-            //secNum ÆÛÁñ¿£ fisrtNumÆÛÁñ·Î º¯°æÇÑ´Ù
+            //secNum í¼ì¦ì—” fisrtNumí¼ì¦ë¡œ ë³€ê²½í•œë‹¤
             arrayPuzzlePiece[secRow, secColumn] = tempObj;
         }
 
-        //Ç® ¼ö ÀÖ´Â ÆÛÁñÀÎÁö È®ÀÎÇÏ±â!
+        //í’€ ìˆ˜ ìˆëŠ” í¼ì¦ì¸ì§€ í™•ì¸í•˜ê¸°!
         PuzzleCheck();
 
 
 
-        //ÆÛÁñ À§Ä¡ Á¤·ÄÇÏ±â
+        //í¼ì¦ ìœ„ì¹˜ ì •ë ¬í•˜ê¸°
         for (int i = 0; i < puzzleAllNumber; i++)
         {
-            //Çà
+            //í–‰
             int row = i / selectLineNumber;
-            //·Ä
+            //ë ¬
             int column = i % selectLineNumber;
 
-            //Çà·Ä¿¡ ¸ÂÃç¼­ À§Ä¡ º¯°æ
+            //í–‰ë ¬ì— ë§ì¶°ì„œ ìœ„ì¹˜ ë³€ê²½
             arrayPuzzlePiece[row, column].transform.localPosition = arrayPuzzlePosition[row, column];
         }
 
-        //ÇÃ·¹ÀÌ °ÔÀÓÀ¸·Î~
+        //í”Œë ˆì´ ê²Œì„ìœ¼ë¡œ~
         m_state = GameState.playingGame;
     }
 
-    //ÆÛÁñÀ» Ç® ¼ö ÀÖ´Â°¡ È®ÀÎÇÏ±â
+    //í¼ì¦ì„ í’€ ìˆ˜ ìˆëŠ”ê°€ í™•ì¸í•˜ê¸°
     void PuzzleCheck()
     {
         lastMatrix.x = selectLineNumber - 1;
         lastMatrix.y = selectLineNumber - 1;
 
-        //¹«Áú¼­µµ ±¸ÇÏ±â
+        //ë¬´ì§ˆì„œë„ êµ¬í•˜ê¸°
         for (int i = 0; i < puzzleAllNumber; i++)
         {
             for (int j = i; j < puzzleAllNumber; j++)
@@ -285,30 +285,30 @@ public class GM : MonoBehaviour
             }
         }
 
-        //ÆÛÁñÀ» Ç® ¼ö ÀÖ´ÂÁö ¾Ë¾Æº¸´Â ¹æ¹ı
-        //rowÀÇ ¼ö°¡ È¦¼öÀÌ°í ¹«Áú¼­µµ°¡ Â¦¼öÀÌ¸é Ç® ¼ö ÀÖ´Ù 
-        //row¼ö°¡ Â¦¼öÀÌ°í 
-        // - ºóÄ­ÆÛÁñÀÌ ¹Ø¿¡¼­ »õ¾î¼­ Â¦¼öÇàÀÌ¸ç ¹«Áú¼­µµ°¡  È¦¼ö
-        // - ºóÄ­ÆÛÁñÀÌ ¹Ø¿¡¼­ »õ¾î¼­ È¦¼öÀÌ°í ¹«Áú¼­µµ°¡ Â¦¼öÀÌ¸é
-        // Ç®¼öÀÖ´Ù -> ¹İ´ëÀÌ¸é Ç®¼ö ¾ø´Ù
-        // ±×·¯ÇÏ´Ù¸é ¾î¶»°Ô ÇØ¾ß Ç® ¼ö ÀÖ´Â ÆÛÁñÀÌ µÇ³ª?
-        //¸Ç ¸¶Áö¸· ÆÛÁñ°ú ±× ¾ÕÀÇ ÆÛÁñÀ» ±³Ã¼ÇÏ¸é Â¦¼öÈ¦¼ö¸¦ º¯°æ ÇÒ ¼ö ÀÖ´Ù
+        //í¼ì¦ì„ í’€ ìˆ˜ ìˆëŠ”ì§€ ì•Œì•„ë³´ëŠ” ë°©ë²•
+        //rowì˜ ìˆ˜ê°€ í™€ìˆ˜ì´ê³  ë¬´ì§ˆì„œë„ê°€ ì§ìˆ˜ì´ë©´ í’€ ìˆ˜ ìˆë‹¤ 
+        //rowìˆ˜ê°€ ì§ìˆ˜ì´ê³  
+        // - ë¹ˆì¹¸í¼ì¦ì´ ë°‘ì—ì„œ ìƒˆì–´ì„œ ì§ìˆ˜í–‰ì´ë©° ë¬´ì§ˆì„œë„ê°€  í™€ìˆ˜
+        // - ë¹ˆì¹¸í¼ì¦ì´ ë°‘ì—ì„œ ìƒˆì–´ì„œ í™€ìˆ˜ì´ê³  ë¬´ì§ˆì„œë„ê°€ ì§ìˆ˜ì´ë©´
+        // í’€ìˆ˜ìˆë‹¤ -> ë°˜ëŒ€ì´ë©´ í’€ìˆ˜ ì—†ë‹¤
+        // ê·¸ëŸ¬í•˜ë‹¤ë©´ ì–´ë–»ê²Œ í•´ì•¼ í’€ ìˆ˜ ìˆëŠ” í¼ì¦ì´ ë˜ë‚˜?
+        //ë§¨ ë§ˆì§€ë§‰ í¼ì¦ê³¼ ê·¸ ì•ì˜ í¼ì¦ì„ êµì²´í•˜ë©´ ì§ìˆ˜í™€ìˆ˜ë¥¼ ë³€ê²½ í•  ìˆ˜ ìˆë‹¤
 
 
-        //Ç®¼ö ¾ø´Â Á¶°ÇÀÎ
-        //1. rowÀÌ È¦¼ö ÀÌ°í, ¹«Áú¼­µµ°¡ È¦¼ö¸é
+        //í’€ìˆ˜ ì—†ëŠ” ì¡°ê±´ì¸
+        //1. rowì´ í™€ìˆ˜ ì´ê³ , ë¬´ì§ˆì„œë„ê°€ í™€ìˆ˜ë©´
         if (selectLineNumber % 2 == 1 && inversion % 2 == 1)
         {
             LastPieceChange();
         }
         else if (selectLineNumber % 2 == 0)
         {
-            //2.¹Ø¿¡¼­ È¦¼öÃşÀÌ°í ¹«Áú¼­µµ°¡ È¦¼ö¸é
+            //2.ë°‘ì—ì„œ í™€ìˆ˜ì¸µì´ê³  ë¬´ì§ˆì„œë„ê°€ í™€ìˆ˜ë©´
             if ((selectLineNumber - lastMatrix.x) % 2 == 1 && inversion % 2 == 1)
             {
                 LastPieceChange();
             }
-            //3.¹Ø¿¡¼­ Â¦¼öÃşÀÌ°í ¹«Áú¼­µµ°¡ Â¦¼öÀÌ¸é
+            //3.ë°‘ì—ì„œ ì§ìˆ˜ì¸µì´ê³  ë¬´ì§ˆì„œë„ê°€ ì§ìˆ˜ì´ë©´
             else if ((selectLineNumber - lastMatrix.x) % 2 == 1 && inversion % 2 == 1)
             {
                 LastPieceChange();
@@ -318,96 +318,96 @@ public class GM : MonoBehaviour
 
     void LastPieceChange()
     {
-        //¼ÅÇÃÇÑ ÆÛÁñÀÇ ¸¶Áö¸·
+        //ì…”í”Œí•œ í¼ì¦ì˜ ë§ˆì§€ë§‰
         int lastNum = puzzleAllNumber - 2;
-        //±×¸®°í ±× ÀüÀÇ ÆÛÁñ
+        //ê·¸ë¦¬ê³  ê·¸ ì „ì˜ í¼ì¦
         int semilastNum = lastNum - 1;
 
-        //¸¶Áö¸· ÆÛÁñÀÇ Çà,·Ä Ã£±â
+        //ë§ˆì§€ë§‰ í¼ì¦ì˜ í–‰,ë ¬ ì°¾ê¸°
         int lastRow = lastNum / selectLineNumber;
         int lastColumn = lastNum % selectLineNumber;
 
-        //¸¶Áö¸· Á÷ÀüÀÇ ÆÛÁñÀÇ Çà,·Ä Ã£±â
+        //ë§ˆì§€ë§‰ ì§ì „ì˜ í¼ì¦ì˜ í–‰,ë ¬ ì°¾ê¸°
         int semiLastRow = semilastNum / selectLineNumber;
         int semiLastColumn = semilastNum % selectLineNumber;
 
-        //°¡Àå ¸¶Áö¸·À» Áı°í
+        //ê°€ì¥ ë§ˆì§€ë§‰ì„ ì§‘ê³ 
         GameObject temp = arrayPuzzlePiece[lastRow, lastColumn];
-        //À§Ä¡±³´ë
+        //ìœ„ì¹˜êµëŒ€
         arrayPuzzlePiece[lastRow, lastColumn] = arrayPuzzlePiece[semiLastRow, semiLastColumn];
         arrayPuzzlePiece[semiLastRow, semiLastColumn] = temp;
     }
 
     void WaitSelect()
     {
-        //¸¶¿ì½º¸¦ Å¬¸¯ÇÏ¸é
+        //ë§ˆìš°ìŠ¤ë¥¼ í´ë¦­í•˜ë©´
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitinfo;
-            //Å¬¸¯ÇÑ°Ô ÆÛÁñ Á¶°¢ÀÌ¶ó¸é
+            //í´ë¦­í•œê²Œ í¼ì¦ ì¡°ê°ì´ë¼ë©´
             if (Physics.Raycast(ray, out hitinfo, 100, 1 << LayerMask.NameToLayer("PuzzlePiece")))
             {
 
-                //ÇØ´ç À§Ä¡ ÆÄ¾ÇÇÏ±â
-                //Ã£Àº ÆÛÁñÀÇ ºÎ¸ğÀÇ localPos¸¦ Ã£¾Æ¼­
+                //í•´ë‹¹ ìœ„ì¹˜ íŒŒì•…í•˜ê¸°
+                //ì°¾ì€ í¼ì¦ì˜ ë¶€ëª¨ì˜ localPosë¥¼ ì°¾ì•„ì„œ
                 Vector3 hitPos = hitinfo.transform.parent.localPosition;
-                //ÇØ´ç Çà·Ä ±¸ÇÏ±â
+                //í•´ë‹¹ í–‰ë ¬ êµ¬í•˜ê¸°
                 selectMatrix.x = (int)Mathf.Round(-hitPos.y / puzzleHeight);
                 selectMatrix.y = (int)Mathf.Round(hitPos.x / puzzleWidth);
 
-                //±âÁØÀº ¾È¿òÁ÷ÀÎ´Ù!
+                //ê¸°ì¤€ì€ ì•ˆì›€ì§ì¸ë‹¤!
                 move_state = MoveState.noMove;
 
-                //ÇØ´ç¶óÀÎ¿¡ ¸¶Áö¸·ÆÛÁñ(ºóÄ­)ÀÌ ÀÖ´ÂÁö È®ÀÎ
+                //í•´ë‹¹ë¼ì¸ì— ë§ˆì§€ë§‰í¼ì¦(ë¹ˆì¹¸)ì´ ìˆëŠ”ì§€ í™•ì¸
                 for (int i = 0; i < selectLineNumber; i++)
                 {
-                    //Çà°Ë»ç
-                    //¼±ÅÃÇÑ Çà°ú 0~line¼ö ¿­À» °Ë»çÇØ¼­ ¸¶Áö¸·ÆÛÁñ°ú °°Àº°Ô ÀÖ´Â°¡?
+                    //í–‰ê²€ì‚¬
+                    //ì„ íƒí•œ í–‰ê³¼ 0~lineìˆ˜ ì—´ì„ ê²€ì‚¬í•´ì„œ ë§ˆì§€ë§‰í¼ì¦ê³¼ ê°™ì€ê²Œ ìˆëŠ”ê°€?
                     if (arrayPuzzlePiece[selectMatrix.x, i].name == (puzzleAllNumber - 1).ToString())
                     {
-                        //ÀÖ°í ¿­ÀÇ À§¿¡¼­ 
+                        //ìˆê³  ì—´ì˜ ìœ„ì—ì„œ 
                         if (i > selectMatrix.y)
                         {
-                            //¿À¸¥ÂÊ ÀÌµ¿À¸·Î
+                            //ì˜¤ë¥¸ìª½ ì´ë™ìœ¼ë¡œ
                             move_state = MoveState.right;
                             break;
                         }
                         else if (i < selectMatrix.y)
                         {
-                            //¿ŞÂÊÀÌµ¿À¸·Î
+                            //ì™¼ìª½ì´ë™ìœ¼ë¡œ
                             move_state = MoveState.left;
                             break;
                         }
                     }
-                    //¿­°Ë»ç
+                    //ì—´ê²€ì‚¬
                     if (arrayPuzzlePiece[i, selectMatrix.y].name == (puzzleAllNumber - 1).ToString())
                     {
                         if (i > selectMatrix.x)
                         {
-                            //¹ØÀ¸·Î ÀÌµ¿
+                            //ë°‘ìœ¼ë¡œ ì´ë™
                             move_state = MoveState.down;
                             break;
                         }
                         else if (i < selectMatrix.x)
                         {
-                            //À§·Î ÀÌµ¿
+                            //ìœ„ë¡œ ì´ë™
                             move_state = MoveState.up;
                             break;
                         }
                     }
                 }
 
-                //ÀÌµ¿ÇÏ´Â°Å¸é
+                //ì´ë™í•˜ëŠ”ê±°ë©´
                 if (move_state != MoveState.noMove)
                 {
-                    //Â÷ÀÌÇà·Ä = ¸¶Áö¸· - ¼±ÅÃ
+                    //ì°¨ì´í–‰ë ¬ = ë§ˆì§€ë§‰ - ì„ íƒ
                     skimaMatrix = lastMatrix - selectMatrix;
 
 
                     m_state = GameState.puzzleMove;
 
-                    //ÀÌµ¿À¸·Î ¹Ù²Û´Ù
+                    //ì´ë™ìœ¼ë¡œ ë°”ê¾¼ë‹¤
                     PuzzleMove();
                 }
             }
@@ -440,20 +440,20 @@ public class GM : MonoBehaviour
 
         for (int i = 0; i < Count; i++)
         {
-            //ÀÌ°Ç µµÂøÀÇ Çà·Ä
+            //ì´ê±´ ë„ì°©ì˜ í–‰ë ¬
             Vector2Int goalMatrix = skimaMatrix + selectMatrix;
-            //ÇÑÄ­ ÀÌµ¿
+            //í•œì¹¸ ì´ë™
             skimaMatrix = skimaMatrix + moveVector;
-            //ÇÇÀÌµ¿ ÆÛÁñÀÇ Çà·Ä
+            //í”¼ì´ë™ í¼ì¦ì˜ í–‰ë ¬
             Vector2Int startMatrix = skimaMatrix + selectMatrix;
 
-            //ÀÌµ¿
+            //ì´ë™
             StartCoroutine(Co_Moving(startMatrix, goalMatrix, arrayPuzzlePiece[startMatrix.x, startMatrix.y]));
 
-            //°ñÀº º¯°æ
+            //ê³¨ì€ ë³€ê²½
             arrayPuzzlePiece[goalMatrix.x, goalMatrix.y].transform.localPosition = arrayPuzzlePosition[startMatrix.x, startMatrix.y];
 
-            //º¯°æ
+            //ë³€ê²½
             GameObject temp = arrayPuzzlePiece[goalMatrix.x, goalMatrix.y];
 
             arrayPuzzlePiece[goalMatrix.x, goalMatrix.y] = arrayPuzzlePiece[startMatrix.x, startMatrix.y];
@@ -462,12 +462,12 @@ public class GM : MonoBehaviour
 
         }
 
-        //¼±ÅÃÇÑ Çà·ÄÀÌ ¸¶Áö¸·Çà·ÄÀÌ µÈ´Ù
-        //¼±ÅÃÇÑ ÆÛÁñÀ§Ä¡¿¡ ¸¶Áö¸·ÆÛÁñÀÌ ÀÌµ¿ÇÏ´Ï±î!
+        //ì„ íƒí•œ í–‰ë ¬ì´ ë§ˆì§€ë§‰í–‰ë ¬ì´ ëœë‹¤
+        //ì„ íƒí•œ í¼ì¦ìœ„ì¹˜ì— ë§ˆì§€ë§‰í¼ì¦ì´ ì´ë™í•˜ë‹ˆê¹Œ!
         lastMatrix = selectMatrix;
     }
 
-    //ÀÌµ¿ ÄÚ·çÆ¾
+    //ì´ë™ ì½”ë£¨í‹´
     IEnumerator Co_Moving(Vector2Int startMatrix, Vector2Int goalMatrix, GameObject puzzlePiece)
     {
         float alpha = 0;
@@ -475,7 +475,7 @@ public class GM : MonoBehaviour
         while (alpha < 1)
         {
             alpha += Time.deltaTime * 5f;
-            //ÆÛÁñÀÇ À§Ä¡´Â = Vector.Lerp(½ÃÀÛÀ§Ä¡, µµÂøÀ§Ä¡, alpha°ª)
+            //í¼ì¦ì˜ ìœ„ì¹˜ëŠ” = Vector.Lerp(ì‹œì‘ìœ„ì¹˜, ë„ì°©ìœ„ì¹˜, alphaê°’)
             puzzlePiece.transform.localPosition = Vector3.Lerp(arrayPuzzlePosition[startMatrix.x, startMatrix.y], arrayPuzzlePosition[goalMatrix.x, goalMatrix.y], alpha);
 
             yield return null;
@@ -483,19 +483,19 @@ public class GM : MonoBehaviour
 
         puzzlePiece.transform.localPosition = arrayPuzzlePosition[goalMatrix.x, goalMatrix.y];
 
-        //°ÔÀÓ Å¬¸®¾îÀÎÁö Ã¼Å©!
+        //ê²Œì„ í´ë¦¬ì–´ì¸ì§€ ì²´í¬!
         if (ClearCheck())
         {
-            //»óÅÂ¸¦ Å¬¸®¾î·Î º¯°æ
+            //ìƒíƒœë¥¼ í´ë¦¬ì–´ë¡œ ë³€ê²½
             m_state = GameState.clear;
-            //¸¶Áö¸·ÆÛÁñ º¸ÀÌ°Ô ÇÏ±â
+            //ë§ˆì§€ë§‰í¼ì¦ ë³´ì´ê²Œ í•˜ê¸°
             lastPuzzlePeace.GetComponentInChildren<MeshRenderer>().enabled = true;
-            //±ÛÀÚ¾ø¾Ö±â
+            //ê¸€ìì—†ì• ê¸°
             ClearText();
         }
         else
         {
-            //»óÅÂ¸¦ ÇÃ·¡ÀÌ°ÔÀÓÀ¸·Î º¯°æ
+            //ìƒíƒœë¥¼ í”Œë˜ì´ê²Œì„ìœ¼ë¡œ ë³€ê²½
             m_state = GameState.playingGame;
         }
 
@@ -510,7 +510,7 @@ public class GM : MonoBehaviour
     {
         bool clear = true;
 
-        //ÆÛÁñÀÌ¸§°ú Çà·ÄÀÇ ¼ø¼­°¡ ÀÏÄ¡ÇÏ´Â°¡?
+        //í¼ì¦ì´ë¦„ê³¼ í–‰ë ¬ì˜ ìˆœì„œê°€ ì¼ì¹˜í•˜ëŠ”ê°€?
         for (int i = 0; i < selectLineNumber; i++)
         {
             for (int j = 0; j < selectLineNumber; j++)
@@ -531,43 +531,43 @@ public class GM : MonoBehaviour
 
     void ViewText()
     {
-        //±ÛÀÚ º¸ÀÌ°Ô ÇÏ±â
+        //ê¸€ì ë³´ì´ê²Œ í•˜ê¸°
         for (int i = 0; i < puzzleAllNumber; i++)
         {
-            //Çà
+            //í–‰
             int row = i / selectLineNumber;
-            //·Ä
+            //ë ¬
             int column = i % selectLineNumber;
 
-            //ÅØ½ºÆ® ¸Ş½¬ Ã£±â
+            //í…ìŠ¤íŠ¸ ë©”ì‰¬ ì°¾ê¸°
             TextMesh tm = arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>();
 
             if (tm != null)
             {
-                //ÅØ½ºÆ® º¯°æ
+                //í…ìŠ¤íŠ¸ ë³€ê²½
                 tm.text = (Int32.Parse(arrayPuzzlePiece[row, column].name) + 1).ToString();
             }
-            //¾øÀ¸¸é
+            //ì—†ìœ¼ë©´
             else
             {
-                //°ÔÀÓ¿ÀºêÁ§Æ®¸¦ ¸¸µé°í
+                //ê²Œì„ì˜¤ë¸Œì íŠ¸ë¥¼ ë§Œë“¤ê³ 
                 GameObject textMesh = new GameObject("Textmesh");
-                //ºÎ¸ğ¸¦ ÁöÁ¤ÇÏ°í ¼¼ÆÃ
+                //ë¶€ëª¨ë¥¼ ì§€ì •í•˜ê³  ì„¸íŒ…
                 textMesh.transform.parent = arrayPuzzlePiece[row, column].transform;
                 textMesh.transform.localPosition = new Vector3(3, -2, 0);
                 textMesh.transform.localScale = new Vector3(0.5f, 0.5f, 1);
-                //ÄÄÆÛ³ÍÆ® Ãß°¡ÇÏ°í ¼¼ÆÃ
+                //ì»´í¼ë„ŒíŠ¸ ì¶”ê°€í•˜ê³  ì„¸íŒ…
                 tm = textMesh.AddComponent<TextMesh>();
                 tm.anchor = TextAnchor.MiddleCenter;
                 tm.alignment = TextAlignment.Center;
                 tm.fontSize = 50;
 
-                //ÅØ½ºÆ® º¯°æ
+                //í…ìŠ¤íŠ¸ ë³€ê²½
                 tm.text = (Int32.Parse(arrayPuzzlePiece[row, column].name) + 1).ToString();
             }
 
 
-            //¸¶Áö¸·Àº ÆÛÁñ ÅØ½ºÆ®´Â ¾Èº¸ÀÌ°Ô
+            //ë§ˆì§€ë§‰ì€ í¼ì¦ í…ìŠ¤íŠ¸ëŠ” ì•ˆë³´ì´ê²Œ
             if (arrayPuzzlePiece[row, column].name == (puzzleAllNumber - 1).ToString())
             {
                 tm.text = "";
@@ -576,15 +576,15 @@ public class GM : MonoBehaviour
     }
     void ClearText()
     {
-        //±ÛÀÚ¾ø¾Ö±â
+        //ê¸€ìì—†ì• ê¸°
         for (int i = 0; i < puzzleAllNumber; i++)
         {
-            //Çà
+            //í–‰
             int row = i / selectLineNumber;
-            //·Ä
+            //ë ¬
             int column = i % selectLineNumber;
 
-            //Çà·Ä¿¡ ¸ÂÃç¼­ À§Ä¡ º¯°æ
+            //í–‰ë ¬ì— ë§ì¶°ì„œ ìœ„ì¹˜ ë³€ê²½
             arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>().text = "";
         }
     }
