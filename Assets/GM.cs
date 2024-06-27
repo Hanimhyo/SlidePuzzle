@@ -194,7 +194,6 @@ public class GM : MonoBehaviour
             if (i == puzzleAllNumber - 1)
             {
                 puzzlePiece.GetComponentInChildren<MeshRenderer>().enabled = false;
-                puzzlePiece.GetComponentInChildren<TextMesh>().text = "";
                 lastPuzzlePeace = puzzlePiece;
             }
         }
@@ -540,12 +539,38 @@ public class GM : MonoBehaviour
             //렬
             int column = i % selectLineNumber;
 
-            //행렬에 맞춰서 위치 변경
-            arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>().text = (Int32.Parse(arrayPuzzlePiece[row, column].name) + 1).ToString();
+            //텍스트 메쉬 찾기
+            TextMesh tm = arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>();
 
+            if (tm != null)
+            {
+                //텍스트 변경
+                tm.text = (Int32.Parse(arrayPuzzlePiece[row, column].name) + 1).ToString();
+            }
+            //없으면
+            else
+            {
+                //게임오브젝트를 만들고
+                GameObject textMesh = new GameObject("Textmesh");
+                //부모를 지정하고 세팅
+                textMesh.transform.parent = arrayPuzzlePiece[row, column].transform;
+                textMesh.transform.localPosition = new Vector3(3, -2, 0);
+                textMesh.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                //컴퍼넌트 추가하고 세팅
+                tm = textMesh.AddComponent<TextMesh>();
+                tm.anchor = TextAnchor.MiddleCenter;
+                tm.alignment = TextAlignment.Center;
+                tm.fontSize = 50;
+
+                //텍스트 변경
+                tm.text = (Int32.Parse(arrayPuzzlePiece[row, column].name) + 1).ToString();
+            }
+
+
+            //마지막은 퍼즐 텍스트는 안보이게
             if (arrayPuzzlePiece[row, column].name == (puzzleAllNumber - 1).ToString())
             {
-                arrayPuzzlePiece[row, column].GetComponentInChildren<TextMesh>().text = "";
+                tm.text = "";
             }
         }
     }
